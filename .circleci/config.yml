@@ -47,8 +47,7 @@ jobs:
                 command: docker load -i /tmp/workspace/image.tar
             - run:
                 name: Publish Docker Image to Docker Hub
-                command: |
-                docker login -u "$USERNAME" -p "$TOKEN" docker.pkg.github.com
+                command: | docker login -u "$USERNAME" -p "$TOKEN" docker.pkg.github.com
                 docker push $IMAGE_NAME:dev
     publish-latest:
         executor: docker-publisher
