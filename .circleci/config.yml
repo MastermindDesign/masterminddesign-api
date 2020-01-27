@@ -1,6 +1,6 @@
 version: 2
-    jobs:
-      buildDev:
+jobs:
+    buildDev:
         environment:
             IMAGE_NAME: masterminddesign/masterminddesign-api
         docker:
@@ -18,25 +18,25 @@ version: 2
                 root: .
                 paths:
                 - ./image.tar
-      build:
+    build:
         environment:
-          IMAGE_NAME: masterminddesign/masterminddesign-api
+            IMAGE_NAME: masterminddesign/masterminddesign-api
         docker:
-          - image: circleci/buildpack-deps:stretch
+            - image: circleci/buildpack-deps:stretch
         steps:
-          - checkout
-          - setup_remote_docker
-          - run:
-              name: Build Docker image
-              command: docker build -t $IMAGE_NAME:latest .
-          - run:
-              name: Archive Docker image
-              command: docker save -o image.tar $IMAGE_NAME
-          - persist_to_workspace:
-              root: .
-              paths:
+            - checkout
+            - setup_remote_docker
+            - run:
+                name: Build Docker image
+                command: docker build -t $IMAGE_NAME:latest .
+            - run:
+                name: Archive Docker image
+                command: docker save -o image.tar $IMAGE_NAME
+            - persist_to_workspace:
+                root: .
+                paths:
                 - ./image.tar
-      publish-dev:
+    publish-dev:
         executor: docker-publisher
         steps:
             - attach_workspace:
@@ -50,7 +50,7 @@ version: 2
                 command: |
                 docker login -u "$USERNAME" -p "$TOKEN" docker.pkg.github.com
                 docker push $IMAGE_NAME:dev
-      publish-latest:
+    publish-latest:
         executor: docker-publisher
         steps:
             - attach_workspace:
@@ -64,29 +64,28 @@ version: 2
                 command: |
                 docker login -u "$USERNAME" -p "$TOKEN" docker.pkg.github.com
                 docker push $IMAGE_NAME:latest
-    workflows:
-      version: 2
-      build-master:
-        jobs:
-          - build:
-              filters:
-                branches:
-                  only: master
-          - publish-latest:
-              requires:
-                - build
-              filters:
-                branches:
-                  only: master
-      build-develop:
+workflows:
+    build-master:
         jobs:
             - build:
                 filters:
-                  branches:
+                branches:
+                    only: master
+            - publish-latest:
+                requires:
+                - build
+                filters:
+                branches:
+                    only: master
+    build-develop:
+        jobs:
+            - build:
+                filters:
+                    branches:
                     only: develop
             - publish-latest:
                 requires:
-                  - build
+                    - build
                 filters:
-                  branches:
+                    branches:
                     only: develop
