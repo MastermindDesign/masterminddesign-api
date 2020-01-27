@@ -12,6 +12,12 @@ jobs:
             - checkout
             - setup_remote_docker
             - run:
+                  name: Build env file
+                  command: |
+                      touch .env
+                      echo "MONGO_URI=$MONGO_URI" >> .env
+                      echo "MONGO_DB=$MONGO_DB" >> .env
+            - run:
                   name: Build Docker image
                   command: |
                       docker build -t $IMAGE_NAME:latest .
