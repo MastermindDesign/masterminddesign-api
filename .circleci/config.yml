@@ -43,9 +43,8 @@ jobs:
                   name: Publish Docker Image to Docker Hub
                   command: |
                       echo "$TOKEN" | docker login -u "$USERNAME" --password-stdin docker.pkg.github.com
-                      IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
-                      docker tag $IMAGE_NAME:latest docker.pkg.github.com/masterminddesign/masterminddesign-api/$IMAGE_NAME:$IMAGE_TAG
-                      docker push docker.pkg.github.com/masterminddesign/masterminddesign-api/$IMAGE_NAME:$IMAGE_TAG
+                      docker tag $IMAGE_NAME:latest docker.pkg.github.com/masterminddesign/masterminddesign-api/$IMAGE_NAME:latest
+                      docker push docker.pkg.github.com/masterminddesign/masterminddesign-api/$IMAGE_NAME:latest
     deploy:
         machine:
             enabled: true
@@ -53,7 +52,7 @@ jobs:
             - run:
                   name: Deploy Over SSH
                   command: |
-                      ssh $SSH_USER@$SSH_HOST "docker login -u ${USERNAME} -p ${TOKEN} docker.pkg.github.com;docker container stop mastermind-prod;docker container prune -f;docker pull docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:0.0.${CIRCLE_PREVIOUS_BUILD_NUM};docker run -d -p 80:8080 --name mastermind-prod docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:0.0.${CIRCLE_PREVIOUS_BUILD_NUM}"
+                      ssh $SSH_USER@$SSH_HOST "docker login -u ${USERNAME} -p ${TOKEN} docker.pkg.github.com;docker container stop mastermind-prod;docker container prune -f;docker pull docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:latest;docker run -d -p 80:8080 --name mastermind-prod docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:latest"
 workflows:
     version: 2
     build:
