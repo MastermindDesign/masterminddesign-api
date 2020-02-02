@@ -10,6 +10,7 @@ import (
 	"github.com/FR0NK3NST33N/masterminddesign-api/utils"
 	"github.com/felixge/httpsnoop"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
 )
 
 func main() {
@@ -20,8 +21,14 @@ func main() {
 
 	loggedRouter := logRequestHandler(router)
 
+	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type"})
+	originsOk := handlers.AllowedOrigins([]string{"*"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS", "DELETE"})
+
 	//router.HandleFunc("/api/contact", controllers.Contact)
-	log.Fatal(http.ListenAndServe(":8080", loggedRouter))
+	//log.Fatal(http.ListenAndServe(":8080", loggedRouter))
+	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(headersOk, originsOk, methodsOk)(loggedRouter)))
+
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
