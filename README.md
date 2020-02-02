@@ -1,5 +1,12 @@
 # Mastermind Design API
 
+<p align="center">
+<b>Develop:&nbsp;</b>
+<a href="https://circleci.com/gh/MastermindDesign/masterminddesign-api/tree/develop">
+<img src="https://circleci.com/gh/MastermindDesign/masterminddesign-api/tree/develop.svg?style=svg" />
+</a>
+</p>
+
 ## Getting Started
 
 > .env
