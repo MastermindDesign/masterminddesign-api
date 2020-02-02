@@ -17,6 +17,8 @@ jobs:
                       touch .env
                       echo "MONGO_URI=$MONGO_URI" >> .env
                       echo "MONGO_DB=$MONGO_DB" >> .env
+                      echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
+                      echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
             - run:
                   name: Build Docker image
                   command: |
@@ -28,22 +30,6 @@ jobs:
                   root: .
                   paths:
                       - ./image.tar
-    publish-dev:
-        executor: docker-publisher
-        steps:
-            - attach_workspace:
-                  at: /tmp/workspace
-            - setup_remote_docker
-            - run:
-                  name: Load archived Docker image
-                  command: docker load -i /tmp/workspace/image.tar
-            - run:
-                  name: Publish Docker Image to Docker Hub
-                  command: |
-                      docker login -u "$USERNAME" -p "$TOKEN" docker.pkg.github.com
-                      IMAGE_TAG="0.0.${CIRCLE_BUILD_NUM}"
-                      docker push docker.pkg.github.com/masterminddesign/masterminddesign-api/$IMAGE_NAME:dev
-                      docker push docker.pkg.github.com/masterminddesign/masterminddesign-api/$IMAGE_NAME:$IMAGE_TAG
     publish-latest:
         executor: docker-publisher
         steps:
@@ -88,12 +74,6 @@ workflows:
                           only:
                               - master
                               - develop
-            - publish-dev:
-                  requires:
-                      - build
-                  filters:
-                      branches:
-                          only: develop
             - publish-latest:
                   requires:
                       - build
