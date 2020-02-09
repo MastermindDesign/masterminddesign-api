@@ -9,8 +9,8 @@ import (
 	"github.com/FR0NK3NST33N/masterminddesign-api/project"
 	"github.com/FR0NK3NST33N/masterminddesign-api/utils"
 	"github.com/felixge/httpsnoop"
-	"github.com/gorilla/mux"
 	"github.com/gorilla/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
@@ -59,7 +59,9 @@ func logRequestHandler(h http.Handler) http.Handler {
 			return
 		}
 
-		utils.LogToElasticsearch("mastermind_logs", string(e))
+		// uncomment to start logging http requests to elasticsearch
+		// turned off due to aws pricing concerns
+		//utils.LogToElasticsearch("mastermind_logs", string(e))
 
 		fmt.Println(string(e))
 

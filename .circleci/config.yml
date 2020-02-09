@@ -55,7 +55,7 @@ jobs:
             - run:
                   name: Deploy Over SSH
                   command: |
-                      ssh $SSH_USER@$SSH_HOST "docker login -u ${USERNAME} -p ${TOKEN} docker.pkg.github.com;docker container stop mastermind-prod;docker container prune -f;docker pull docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:latest;docker run -d -p 80:8080 --name mastermind-prod docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:latest"
+                      ssh $SSH_USER@$SSH_HOST "docker login -u ${USERNAME} -p ${TOKEN} docker.pkg.github.com;docker container stop mastermind-prod;docker container prune -f;docker pull docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:latest;docker run -d -p 8080:8080 -p 8081:8080 --name mastermind-prod docker.pkg.github.com/masterminddesign/masterminddesign-api/mastermindapi:latest"
 workflows:
     version: 2
     build:
